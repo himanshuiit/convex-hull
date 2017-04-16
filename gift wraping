@@ -1,0 +1,71 @@
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct wrapping
+{
+    int x, y;
+};
+
+
+int rotation(wrapping p, wrapping q, wrapping r)
+{
+    int val = (q.y - p.y) * (r.x - q.x) -
+              (q.x - p.x) * (r.y - q.y);
+
+    if (val == 0) return 0;
+    return (val > 0)? 1: 2;
+}
+
+void convexHull(wrapping points[], int n)
+{
+
+    if (n < 3) return;
+
+
+    vector<wrapping> hull;
+
+
+    int l = 0;
+    for (int i = 1; i < n; i++)
+        if (points[i].x < points[l].x)
+            l = i;
+
+    int p = l, q;
+    do
+    {
+
+        hull.push_back(points[p]);
+
+
+        q = (p+1)%n;
+        for (int i = 0; i < n; i++)
+        {
+
+           if (rotation(points[p], points[i], points[q]) == 2)
+               q = i;
+        }
+
+
+        p = q;
+
+    } while (p != l);
+
+
+    for (int i = 0; i < hull.size(); i++)
+        cout << "(" << hull[i].x << ", "
+              << hull[i].y << ")\n";
+}
+
+int main()
+{
+    int n;
+    cout<<"enter the number of points";
+    cin>>n;
+    wrapping points[n];
+    for(int i=0;i<n;i++)
+        cin>>points[i].x>>points[i].y;
+    convexHull(points, n);
+    return 0;
+}
